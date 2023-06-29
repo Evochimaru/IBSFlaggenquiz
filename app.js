@@ -3,10 +3,28 @@ const app = express();
 var countryName = '';
 var countryNameAlternativ = '';
 
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.json());
+
+// Array to store the names in the lobby
+const lobby = [];
+
+// Endpoint to join the lobby
+app.post('/join-lobby', (req, res) => {
+    const { name } = req.body;
+    lobby.push(name);
+
+    res.json({ names: lobby });
+});
+
+
 // serve your css and javascript as static 
 app.use(express.static(__dirname + "/"));
 
 app.get('/', (req, res) => res.sendFile(__dirname + '/src/index.html'));
+
+app.get('/lobby.js', (req, res) => res.sendFile(__dirname + '/src/lobby.js'));
 
 app.get('/apiImage', (req, res) => {
 
@@ -1174,8 +1192,8 @@ app.get('/apiImage', (req, res) => {
             break;
 
         case 229:
-            countryName = 'Saint Vincent und Granadien'  
-            countryNameAlternativ = 'St. Vincent und Granadien'          
+            countryName = 'Saint Vincent und Granadien'
+            countryNameAlternativ = 'St. Vincent und Granadien'
             res.sendFile(__dirname + '/Images/vc.png');
             break;
 
@@ -1251,7 +1269,7 @@ app.get('/apiImage', (req, res) => {
 
 app.get('/validate', (req, res) => {
     console.log(countryName)
-    
+
     var userEingabe = 'Deutschland';
     console.log('Die user eingabe war:' + userEingabe);
 
